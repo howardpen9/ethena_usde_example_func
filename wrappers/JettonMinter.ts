@@ -1,11 +1,11 @@
 import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from '@ton/core';
 
-export type SampleConfig = {
+export type JettonMinterConfig = {
     id: number;
     counter: number;
 };
 
-export function sampleConfigToCell(config: SampleConfig): Cell {
+export function jettonConfigToCell(config: JettonMinterConfig): Cell {
     return beginCell().storeUint(config.id, 32).storeUint(config.counter, 32).endCell();
 }
 
@@ -13,17 +13,17 @@ export const Opcodes = {
     increase: 0x7e8764ef,
 };
 
-export class Sample implements Contract {
+export class jetton implements Contract {
     constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
 
     static createFromAddress(address: Address) {
-        return new Sample(address);
+        return new jetton(address);
     }
 
-    static createFromConfig(config: SampleConfig, code: Cell, workchain = 0) {
-        const data = sampleConfigToCell(config);
+    static createFromConfig(config: JettonMinterConfig, code: Cell, workchain = 0) {
+        const data = jettonConfigToCell(config);
         const init = { code, data };
-        return new Sample(contractAddress(workchain, init), init);
+        return new jetton(contractAddress(workchain, init), init);
     }
 
     async sendDeploy(provider: ContractProvider, via: Sender, value: bigint) {
@@ -54,13 +54,13 @@ export class Sample implements Contract {
         });
     }
 
-    async getCounter(provider: ContractProvider) {
-        const result = await provider.get('get_counter', []);
-        return result.stack.readNumber();
-    }
+    // async getCounter(provider: ContractProvider) {
+    //     const result = await provider.get('get_counter', []);
+    //     return result.stack.readNumber();
+    // }
 
-    async getID(provider: ContractProvider) {
-        const result = await provider.get('get_id', []);
-        return result.stack.readNumber();
-    }
+    // async getID(provider: ContractProvider) {
+    //     const result = await provider.get('get_id', []);
+    //     return result.stack.readNumber();
+    // }
 }
