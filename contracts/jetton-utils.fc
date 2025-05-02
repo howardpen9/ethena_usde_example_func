@@ -12,12 +12,14 @@ cell pack_jetton_wallet_data(int status, int balance, slice owner_address, slice
 }
 
 cell calculate_jetton_wallet_state_init(slice owner_address, slice jetton_master_address, cell jetton_wallet_code) inline {
-    {-
+{-
     https://github.com/ton-blockchain/ton/blob/8a9ff339927b22b72819c5125428b70c406da631/crypto/block/block.tlb#L144
+
     _ split_depth:(Maybe (## 5)) special:(Maybe TickTock)
     code:(Maybe ^Cell) data:(Maybe ^Cell)
-    library:(Maybe ^Cell) = StateInit;
-  -}
+    library:(Maybe ^Cell) 
+        = StateInit;
+-}
     return begin_cell()
     .store_uint(0, 2) ;; 0b00 - No split_depth; No special
     .store_maybe_ref(jetton_wallet_code)
